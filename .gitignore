@@ -98,6 +98,9 @@ pip-delete-this-directory.txt
 # Archivos de pytype
 .pytype/
 
+# Archivos de datos
+data/*.json
+
 # Archivos de Cython debug
 cython_debug/
 
