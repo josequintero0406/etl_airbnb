@@ -36,23 +36,6 @@ class Extraccion:
         print(f"El archivo CSV no contiene registros: {ruta}")
         return None
 
-    def get_xlsx(self, ruta: str | Path) -> Optional[pd.DataFrame]:
-        """Lee un archivo Excel y devuelve un DataFrame con datos validos."""
-        try:
-            df = pd.read_excel(Path(ruta))
-        except FileNotFoundError:
-            print(f"No se encontro el archivo Excel: {ruta}")
-            return None
-        except (OSError, ValueError) as error:
-            print(f"No fue posible leer el archivo Excel {ruta}: {error}")
-            return None
-
-        if self.validar_df(df):
-            return df
-
-        print(f"El archivo Excel no contiene registros: {ruta}")
-        return None
-
     def get_api(
         self, url: str, params: Optional[dict[str, Any]] = None
     ) -> Optional[pd.DataFrame]:
