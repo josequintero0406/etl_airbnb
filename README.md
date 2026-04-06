@@ -1,10 +1,10 @@
-MIEMBROS DEL TALLER DE ETL DE LAS BASES DE DATOS DE AIRBNB
+## Integrantes del grupo y sus responsabilidades
 
---José Manuel Quintero Rodriguez
+José Manuel Quintero Rodriguez (Ecnargado de manejar la base de datos y logs de ETL)
 
---Roberto Echeverry Arroyabe
+Roberto Echeverry Arroyabe (Analista de datos)
 
---Jalvi Humberto Villegas Taborda
+Jalvi Humberto Villegas Taborda (Encargado de transformar y cargar los datos)
 
 # ETL Airbnb — Ciudad Autónoma de Buenos Aires, Argentina
 
