@@ -1,0 +1,52 @@
+2026-04-05 21:08:59 | INFO     | main | Logger 'main' iniciado — archivo: C:\Users\josem\Documents\ITM\Semestre10\Inteligencia Negocios\Taller2\etl_airbnb\logs\log_20260405_2108.txt
+2026-04-05 21:08:59 | INFO     | main | ╔══════════════════════════════════════╗
+2026-04-05 21:08:59 | INFO     | main | ║   ETL AIRBNB BUENOS AIRES — INICIO   ║
+2026-04-05 21:08:59 | INFO     | main | ╚══════════════════════════════════════╝
+2026-04-05 21:08:59 | INFO     | main | ── FASE 1: EXTRACCIÓN ──────────────────
+2026-04-05 21:08:59 | INFO     | extraccion | Logger 'extraccion' iniciado — archivo: C:\Users\josem\Documents\ITM\Semestre10\Inteligencia Negocios\Taller2\etl_airbnb\logs\log_20260405_2108.txt
+2026-04-05 21:08:59 | INFO     | extraccion | Extraccion inicializada — URI: mongodb://localhost:27017 | DB: airbnb_argentina
+2026-04-05 21:08:59 | INFO     | extraccion | Intentando conectar a MongoDB...
+2026-04-05 21:08:59 | INFO     | extraccion | Conexión exitosa a MongoDB — Base de datos: 'airbnb_argentina'
+2026-04-05 21:08:59 | INFO     | extraccion | Colecciones disponibles: ['calendar', 'reviews', 'listings']
+2026-04-05 21:08:59 | INFO     | extraccion | === Iniciando extracción completa de colecciones ===
+2026-04-05 21:08:59 | INFO     | extraccion | Extrayendo colección: 'listings'...
+2026-04-05 21:08:59 | WARNING  | extraccion | La colección 'listings' está vacía o no existe.
+2026-04-05 21:08:59 | INFO     | extraccion | Extrayendo colección: 'reviews'...
+2026-04-05 21:08:59 | WARNING  | extraccion | La colección 'reviews' está vacía o no existe.
+2026-04-05 21:08:59 | INFO     | extraccion | Extrayendo colección: 'calendar'...
+2026-04-05 21:08:59 | WARNING  | extraccion | La colección 'calendar' está vacía o no existe.
+2026-04-05 21:08:59 | INFO     | extraccion | === Resumen de extracción ===
+2026-04-05 21:08:59 | INFO     | extraccion |   listings    :        0 registros
+2026-04-05 21:08:59 | INFO     | extraccion |   reviews     :        0 registros
+2026-04-05 21:08:59 | INFO     | extraccion |   calendar    :        0 registros
+2026-04-05 21:08:59 | INFO     | extraccion |   TOTAL       :        0 registros extraídos
+2026-04-05 21:08:59 | INFO     | extraccion | Conexión a MongoDB cerrada correctamente.
+2026-04-05 21:08:59 | INFO     | main | FASE 2: TRANSFORMACIÓN
+2026-04-05 21:08:59 | INFO     | transformacion | Logger 'transformacion' iniciado — archivo: C:\Users\josem\Documents\ITM\Semestre10\Inteligencia Negocios\Taller2\etl_airbnb\logs\log_20260405_2108.txt
+2026-04-05 21:08:59 | INFO     | transformacion | Transformacion inicializada.
+2026-04-05 21:08:59 | INFO     | transformacion | ========================================
+2026-04-05 21:08:59 | INFO     | transformacion |   INICIO DE TRANSFORMACIONES ETL
+2026-04-05 21:08:59 | INFO     | transformacion | ========================================
+2026-04-05 21:08:59 | WARNING  | transformacion | DataFrame 'listings' vacío — se omite transformación.
+2026-04-05 21:08:59 | WARNING  | transformacion | DataFrame 'calendar' vacío — se omite transformación.
+2026-04-05 21:08:59 | WARNING  | transformacion | DataFrame 'reviews' vacío — se omite transformación.
+2026-04-05 21:08:59 | INFO     | transformacion | ========================================
+2026-04-05 21:08:59 | INFO     | transformacion |   TRANSFORMACIONES COMPLETADAS
+2026-04-05 21:08:59 | INFO     | transformacion | ========================================
+2026-04-05 21:08:59 | INFO     | main | FASE 3: CARGA
+2026-04-05 21:08:59 | INFO     | carga | Logger 'carga' iniciado — archivo: C:\Users\josem\Documents\ITM\Semestre10\Inteligencia Negocios\Taller2\etl_airbnb\logs\log_20260405_2108.txt
+2026-04-05 21:08:59 | INFO     | carga | Carga inicializada — SQLite: data\airbnb_argentina.sqlite | XLSX dir: data
+2026-04-05 21:08:59 | INFO     | carga | ========================================
+2026-04-05 21:08:59 | INFO     | carga |   INICIO DE CARGA ETL
+2026-04-05 21:08:59 | INFO     | carga | ========================================
+2026-04-05 21:08:59 | INFO     | carga | === Cargando datos en SQLite: data\airbnb_argentina.sqlite ===
+2026-04-05 21:08:59 | WARNING  | carga |   DataFrame 'listings' vacío — se omite.
+2026-04-05 21:08:59 | WARNING  | carga |   DataFrame 'calendar' vacío — se omite.
+2026-04-05 21:08:59 | WARNING  | carga |   DataFrame 'reviews' vacío — se omite.
+2026-04-05 21:08:59 | INFO     | carga | Carga SQLite completada: data\airbnb_argentina.sqlite
+2026-04-05 21:08:59 | INFO     | carga | === Exportando datos a XLSX en: data ===
+2026-04-05 21:08:59 | WARNING  | carga |   DataFrame 'listings' vacío — se omite exportación XLSX.
+2026-04-05 21:08:59 | WARNING  | carga |   DataFrame 'calendar' vacío — se omite exportación XLSX.
+2026-04-05 21:08:59 | WARNING  | carga |   DataFrame 'reviews' vacío — se omite exportación XLSX.
+2026-04-05 21:08:59 | INFO     | carga | === Exportando XLSX combinado: data\airbnb_argentina_etl.xlsx ===
+2026-04-05 21:08:59 | ERROR    | carga | Error al exportar XLSX combinado: At least one sheet must be visible
