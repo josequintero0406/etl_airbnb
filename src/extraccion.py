@@ -1,87 +1,134 @@
-"""Utilidades de extraccion para archivos, APIs y MongoDB."""
+"""la clase Extraccion se conecta a una base de datos MongoDB local,
+consulta las colecciones Listings, Reviews y Calendar, y retorna los datos
+como DataFrames de pandas listos.
+"""
 
-from __future__ import annotations
-
+import sys
 from pathlib import Path
-from typing import Any, Optional
+
+# Asegurar que src/ esté en el path para importar logger_config
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import pandas as pd
-import requests
 from pymongo import MongoClient
-from pymongo.database import Database
-from pymongo.errors import PyMongoError
-
+from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
+from logger_config import get_logger
 
 class Extraccion:
-    """Centraliza la lectura de fuentes externas usadas por el proyecto."""
+    ## Nombres de las colecciones esperadas en MongoDB
+    COLECCIONES = ["listings", "reviews", "calendar"]
 
-    def __init__(self, timeout: int = 10) -> None:
-        """Configura el timeout por defecto para llamadas HTTP."""
-        self.timeout = timeout
+    def __init__(self, uri: str = "mongodb://localhost:27017", db_name: str = "airbnb_argentina"):
+    
+        self.uri = uri
+        self.db_name = db_name
+        self.client = None
+        self.db = None
+        self.logger = get_logger("extraccion")
+        self.logger.info(f"Extraccion inicializada — URI: {uri} | DB: {db_name}")
 
-    def get_csv(self, ruta: str | Path, separador: str = ",") -> Optional[pd.DataFrame]:
-        """Lee un archivo CSV y devuelve un DataFrame con datos validos."""
+    def conectar(self) -> None:
+    
+        self.logger.info("Intentando conectar a MongoDB...")
         try:
-            df = pd.read_csv(Path(ruta), sep=separador)
-        except FileNotFoundError:
-            print(f"No se encontro el archivo CSV: {ruta}")
-            return None
-        except (OSError, pd.errors.EmptyDataError, pd.errors.ParserError) as error:
-            print(f"No fue posible leer el CSV {ruta}: {error}")
-            return None
+            self.client = MongoClient(self.uri, serverSelectionTimeoutMS=5000)
+            # Ping para verificar conexión real
+            self.client.admin.command("ping")
+            self.db = self.client[self.db_name]
+            self.logger.info(f"Conexión exitosa a MongoDB — Base de datos: '{self.db_name}'")
 
-        if self.validar_df(df):
+            # Listar colecciones disponibles
+            colecciones_disponibles = self.db.list_collection_names()
+            self.logger.info(f"Colecciones disponibles: {colecciones_disponibles}")## Registra en el log el resultado de la conexión.
+
+        except ServerSelectionTimeoutError as e: ##Si el servidor no responde a tiempo.
+            self.logger.error(f"Timeout al conectar a MongoDB: {e}")
+            raise
+        except ConnectionFailure as e:  ##Si no puede conectarse al servidor MongoDB
+            self.logger.error(f"Fallo de conexión a MongoDB: {e}")
+            raise
+
+    def extraer_coleccion(self, nombre_coleccion: str, limite: int = 0) -> pd.DataFrame:
+    
+        if self.db is None:
+            raise RuntimeError("Debe llamar a conectar() antes de extraer datos.")
+
+        self.logger.info(f"Extrayendo colección: '{nombre_coleccion}'...")
+
+        try:
+            coleccion = self.db[nombre_coleccion]
+
+            # Aplicar límite si se especifica
+            cursor = coleccion.find({}, {"_id": 0})  # Excluir campo _id de MongoDB
+            if limite > 0:
+                cursor = cursor.limit(limite)
+                self.logger.info(f"  Aplicando límite de {limite} registros")
+
+            df = pd.DataFrame(list(cursor))
+
+            if df.empty:
+                self.logger.warning(
+                    f"La colección '{nombre_coleccion}' está vacía o no existe."
+                )
+                return df
+
+            self.logger.info(
+                f"  ✓ '{nombre_coleccion}': {len(df):,} registros | {len(df.columns)} columnas"
+            )
             return df
 
-        print(f"El archivo CSV no contiene registros: {ruta}")
-        return None
+        except Exception as e:
+            self.logger.error(f"Error al extraer '{nombre_coleccion}': {e}")
+            raise
 
-    def get_api(
-        self, url: str, params: Optional[dict[str, Any]] = None
-    ) -> Optional[pd.DataFrame]:
-        """Consulta una API JSON y transforma la respuesta en un DataFrame."""
-        try:
-            response = requests.get(url, params=params, timeout=self.timeout)
-            response.raise_for_status()
-            data = response.json()
-        except requests.exceptions.RequestException as error:
-            print(f"Error al realizar la solicitud a la API: {error}")
-            return None
-        except ValueError as error:
-            print(f"La API no devolvio un JSON valido: {error}")
-            return None
+    def extraer_todo(self, limite: int = 0) -> dict[str, pd.DataFrame]:
+    
+        if self.db is None:
+            raise RuntimeError("Debe llamar a conectar() antes de extraer datos.")
 
-        if isinstance(data, list):
-            df = pd.DataFrame(data)
-        elif isinstance(data, dict):
-            df = pd.json_normalize(data)
-        else:
-            print("La API devolvio un formato no soportado.")
-            return None
+        self.logger.info("=== Iniciando extracción completa de colecciones ===")
+        dataframes = {}
 
-        if self.validar_df(df):
-            return df
+        for nombre in self.COLECCIONES:
+            try:
+                df = self.extraer_coleccion(nombre, limite=limite)
+                dataframes[nombre] = df
+            except Exception as e:
+                self.logger.error(f"No se pudo extraer '{nombre}': {e}")
+                dataframes[nombre] = pd.DataFrame()  # DataFrame vacío como fallback
 
-        print(f"La API {url} no devolvio registros.")
-        return None
+        # Resumen final de extracción
+        self.logger.info("=== Resumen de extracción ===")
+        total_registros = 0
+        for nombre, df in dataframes.items():
+            registros = len(df)
+            total_registros += registros
+            self.logger.info(f"  {nombre:12s}: {registros:>8,} registros")
+        self.logger.info(f"  {'TOTAL':12s}: {total_registros:>8,} registros extraídos")
 
-    def conectar_mongodb(
-        self,
-        uri: str,
-        database: str,
-        server_selection_timeout_ms: int = 5000,
-    ) -> Optional[Database]:
-        """Intenta abrir una conexion a MongoDB y validar el acceso a la base."""
-        try:
-            client = MongoClient(uri, serverSelectionTimeoutMS=server_selection_timeout_ms)
-            client.admin.command("ping")
-            db = client[database]
-            print(f"Conexion exitosa a MongoDB: {database}")
-            return db
-        except PyMongoError as error:
-            print(f"Error al conectar a MongoDB: {error}")
-            return None
+        return dataframes
 
-    def validar_df(self, df: Optional[pd.DataFrame] = None) -> bool:
-        """Valida que un DataFrame exista y tenga al menos un registro."""
-        return df is not None and not df.empty
+    def cerrar_conexion(self) -> None:
+
+        if self.client:
+            self.client.close()
+            self.logger.info("Conexión a MongoDB cerrada correctamente.")
+
+# Ejecución directa para prueba rápida
+if __name__ == "__main__":
+    ext = Extraccion(uri="mongodb://localhost:27017", db_name="airbnb_argentina")
+    try:
+        ext.conectar()
+        dfs = ext.extraer_todo()
+
+        print("\n--- Vista previa de Listings ---")
+        print(dfs["listings"].head(3))
+
+        print("\n--- Vista previa de Calendar ---")
+        print(dfs["calendar"].head(3))
+
+        print("\n--- Vista previa de Reviews ---")
+        print(dfs["reviews"].head(3))
+
+    finally:
+        ext.cerrar_conexion()
