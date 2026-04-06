@@ -1,10 +1,10 @@
 ## Integrantes del grupo y sus responsabilidades
 
-José Manuel Quintero Rodriguez (Ecnargado de manejar la base de datos y logs de ETL)
+#### José Manuel Quintero Rodriguez (Encargado de manejar la base de datos y logs de ETL)
 
-Roberto Echeverry Arroyabe (Analista de datos)
+#### Roberto Echeverry Arroyabe (Analista de datos)
 
-Jalvi Humberto Villegas Taborda (Encargado de transformar y cargar los datos)
+#### Jalvi Humberto Villegas Taborda (Encargado de transformar y cargar los datos)
 
 # ETL Airbnb — Ciudad Autónoma de Buenos Aires, Argentina
 
