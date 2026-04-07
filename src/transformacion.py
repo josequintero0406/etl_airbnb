@@ -1,6 +1,4 @@
 """
-transformacion.py
------------------
 Módulo de transformación de datos del proceso ETL Airbnb Buenos Aires.
 
 Contiene la clase Transformacion que recibe los DataFrames extraídos de MongoDB
