@@ -61,10 +61,7 @@ class Transformacion:
         self.logger = get_logger("transformacion")
         self.logger.info("Transformacion inicializada.")
 
-    # ──────────────────────────────────────────────
     # Utilidades internas
-    # ──────────────────────────────────────────────
-
     def _log_cambio_registros(self, nombre: str, antes: int, despues: int) -> None:
         """Registra en log la diferencia de registros antes/después de una limpieza."""
         eliminados = antes - despues
@@ -396,10 +393,7 @@ class Transformacion:
         self._log_cambio_registros("reviews", antes, despues)
         return df
 
-    # ──────────────────────────────────────────────
     # Método principal
-    # ──────────────────────────────────────────────
-
     def transformar_todo(self) -> dict[str, pd.DataFrame]:
         """
         Ejecuta todas las transformaciones sobre los tres DataFrames.

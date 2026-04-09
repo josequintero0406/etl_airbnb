@@ -32,16 +32,6 @@ etl_airbnb/
 
 ---
 
-## Integrantes del grupo y sus responsabilidades
-
-#### José Manuel Quintero Rodriguez (Encargado de manejar la base de datos y logs de ETL)
-
-#### Roberto Echeverry Arroyabe (Encargado del analisis de los datos)
-
-#### Jalvi Humberto Villegas Taborda (Encargado de transformar y cargar los datos)
-
----
-
 ## Instalación
 
 ### 1. Clonar el repositorio
@@ -140,10 +130,9 @@ python src/carga.py
 
 | Nombre | Responsabilidad |
 |--------|----------------|
-| [Nombre 1] | Extracción y MongoDB |
-| [Nombre 2] | Transformación |
-| [Nombre 3] | EDA y visualizaciones |
-| [Nombre 4] | Carga e informe |
+| José Manuel Quintero Rodríguez | Extracción, MongoDB e Informe |
+| Roberto Echeverry Arroyabe | EDA y visualizaciones |
+| Jalvi Humberto Villegas Taborda | Transformación Y Carga|
 
 ---
 
