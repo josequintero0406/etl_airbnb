@@ -62,13 +62,7 @@ class Carga:
 
         self.logger.info(f"Carga inicializada — SQLite: {self.db_path} | XLSX dir: {self.xlsx_dir}")
 
-    # ──────────────────────────────────────────────
     # Carga a SQLite
-    # ──────────────────────────────────────────────
-# ──────────────────────────────────────────────
-    # Carga a SQLite
-    # ──────────────────────────────────────────────
-
     def cargar_sqlite(self, dataframes: dict[str, pd.DataFrame]) -> None:
         """
         Inserta los DataFrames transformados en una base de datos SQLite.
@@ -124,10 +118,7 @@ class Carga:
             self.logger.error(f"Error al cargar en SQLite: {e}")
             raise
 
-    # ──────────────────────────────────────────────
     # Exportación a XLSX
-    # ──────────────────────────────────────────────
-
     def exportar_xlsx(self, dataframes: dict[str, pd.DataFrame]) -> None:
         """
         Exporta cada DataFrame a un archivo XLSX independiente.
@@ -164,6 +155,7 @@ class Carga:
             except Exception as e:
                 self.logger.error(f"  Error exportando '{nombre}' a XLSX: {e}")
 
+    # Exportación a XLSX combinado
     def exportar_xlsx_combinado(self, dataframes: dict[str, pd.DataFrame], nombre_archivo: str = "airbnb_argentina_etl.xlsx") -> None:
         """
         Exporta todos los DataFrames en un único archivo XLSX con múltiples hojas.
@@ -194,10 +186,7 @@ class Carga:
             self.logger.error(f"Error al exportar XLSX combinado: {e}")
             raise
 
-    # ──────────────────────────────────────────────
     # Verificación de carga
-    # ──────────────────────────────────────────────
-
     def verificar_carga(self, tablas_esperadas: list[str] = None) -> dict[str, int]:
         """
         Verifica que las tablas existan en SQLite y cuenta sus registros.
@@ -243,10 +232,7 @@ class Carga:
 
         return conteos
 
-    # ──────────────────────────────────────────────
     # Método principal
-    # ──────────────────────────────────────────────
-
     def cargar_todo(self, dataframes: dict[str, pd.DataFrame]) -> None:
         """
         Ejecuta el proceso completo de carga: SQLite + XLSX + verificación.
@@ -276,10 +262,7 @@ class Carga:
         self.logger.info(f"  Total registros: {sum(v for v in conteos.values() if v > 0):,}")
         self.logger.info("========================================")
 
-
-# ──────────────────────────────────────────────
 # Ejecución directa para prueba
-# ──────────────────────────────────────────────
 if __name__ == "__main__":
     from extraccion import Extraccion
     from transformacion import Transformacion

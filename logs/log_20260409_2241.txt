@@ -1,0 +1,17 @@
+2026-04-09 22:41:30 | INFO     | carga | Logger 'carga' iniciado — archivo: C:\Users\josem\Documents\ITM\Semestre10\Inteligencia Negocios\Taller2\etl_airbnb\logs\log_20260409_2241.txt
+2026-04-09 22:41:30 | INFO     | carga | Carga inicializada — SQLite: data\airbnb_argentina.sqlite | XLSX dir: data
+2026-04-09 22:41:30 | INFO     | carga | ========================================
+2026-04-09 22:41:30 | INFO     | carga |   INICIO DE CARGA ETL
+2026-04-09 22:41:30 | INFO     | carga | ========================================
+2026-04-09 22:41:30 | INFO     | carga | === Cargando datos en SQLite: data\airbnb_argentina.sqlite ===
+2026-04-09 22:41:32 | INFO     | carga |   ✓ Tabla 'listings': 27,348 registros cargados
+2026-04-09 22:42:54 | INFO     | carga |   ✓ Tabla 'calendar': 9,982,072 registros cargados
+2026-04-09 22:43:19 | INFO     | carga |   ✓ Tabla 'reviews': 1,042,702 registros cargados
+2026-04-09 22:43:19 | INFO     | carga | Carga SQLite completada: data\airbnb_argentina.sqlite
+2026-04-09 22:43:19 | INFO     | carga | === Exportando datos a XLSX en: data ===
+2026-04-09 22:44:29 | INFO     | carga |   ✓ XLSX exportado: data\listings.xlsx (27,348 filas × 71 columnas)
+2026-04-09 22:44:35 | ERROR    | carga |   Error exportando 'calendar' a XLSX: At least one sheet must be visible
+2026-04-09 22:48:45 | ERROR    | carga |   Error exportando 'reviews' a XLSX: Juan who was taking care of the Airbnb was so awesome and kind! We would definitely stay her again! cannot be used in worksheets.
+2026-04-09 22:48:46 | INFO     | carga | === Exportando XLSX combinado: data\airbnb_argentina_etl.xlsx ===
+2026-04-09 22:49:05 | INFO     | carga |   Hoja 'listings': 27,348 registros
+2026-04-09 22:50:23 | ERROR    | carga | Error al exportar XLSX combinado: This sheet is too large! Your sheet size is: 9982072, 11 Max sheet size is: 1048576, 16384

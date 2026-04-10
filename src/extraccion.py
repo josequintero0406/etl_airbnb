@@ -6,12 +6,12 @@ como DataFrames de pandas listos.
 import sys
 from pathlib import Path
 
-# Asegurar que src/ esté en el path para importar logger_config
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
 import pandas as pd
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
+
+# Asegurar que src/ esté en el path para importar logger_config
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from logger_config import get_logger
 
 class Extraccion:
@@ -20,8 +20,8 @@ class Extraccion:
 
     def __init__(self, uri: str = "mongodb://localhost:27017", db_name: str = "airbnb_argentina"):
     
-        self.uri = uri
-        self.db_name = db_name
+        self.uri = uri  ##conexión a MongoDB. Por defecto localhost:27017
+        self.db_name = db_name  ##Nombre de la base de datos.'airbnb_argentina'.
         self.client = None
         self.db = None
         self.logger = get_logger("extraccion")

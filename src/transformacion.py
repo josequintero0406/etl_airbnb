@@ -20,12 +20,10 @@ Uso básico:
 import ast
 import sys
 from pathlib import Path
-
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from logger_config import get_logger
-
 
 class Transformacion:
     """
@@ -90,7 +88,7 @@ class Transformacion:
             return df
 
         df = df.copy()
-        # Eliminar símbolo $, comas y espacios; convertir a float
+        # Eliminar símbolo de dolar $, comas y espacios; convertir a dato de tipo flotante
         df[columna] = (
             df[columna]
             .astype(str)
@@ -219,7 +217,7 @@ class Transformacion:
         )
         return df
 
-    # Transformaciones por colección   
+    # Transformaciones por colección
     def transformar_listings(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Aplica todas las transformaciones al DataFrame de Listings.
@@ -429,7 +427,6 @@ class Transformacion:
         self.logger.info("  TRANSFORMACIONES COMPLETADAS")
         self.logger.info("========================================")
         return resultados
-
 
 # Función auxiliar (fuera de clase para reutilización)
 def _derivar_variables_temporales_local(df, columna, logger):
