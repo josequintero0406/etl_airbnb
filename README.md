@@ -1,8 +1,18 @@
 # ETL Airbnb — Ciudad Autónoma de Buenos Aires, Argentina
 
-**Taller 2 — Inteligencia de Negocios | ITM**
+### Taller 2 — Inteligencia de Negocios | ITM
 
 Implementación de un proceso ETL completo sobre los datasets de Airbnb Buenos Aires, usando MongoDB como fuente, con transformaciones en Python y carga final en SQLite y XLSX.
+
+---
+
+## Integrantes del grupo
+
+| Nombre | Responsabilidad |
+|--------|----------------|
+| José Manuel Quintero Rodríguez | Extracción, MongoDB e Informe |
+| Roberto Echeverry Arroyabe | EDA y visualizaciones |
+| Jalvi Humberto Villegas Taborda | Transformación Y Carga|
 
 ---
 
@@ -123,16 +133,6 @@ python src/carga.py
 | `data/reviews.xlsx` | Reviews limpios en Excel |
 | `data/airbnb_argentina_etl.xlsx` | Archivo combinado con las 3 hojas |
 | `logs/log_YYYYMMDD_HHMM.txt` | Log de cada ejecución |
-
----
-
-## Integrantes del grupo
-
-| Nombre | Responsabilidad |
-|--------|----------------|
-| José Manuel Quintero Rodríguez | Extracción, MongoDB e Informe |
-| Roberto Echeverry Arroyabe | EDA y visualizaciones |
-| Jalvi Humberto Villegas Taborda | Transformación Y Carga|
 
 ---
 

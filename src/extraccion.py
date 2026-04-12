@@ -48,7 +48,7 @@ class Extraccion:
             self.logger.error(f"Fallo de conexión a MongoDB: {e}")
             raise
 
-    def extraer_coleccion(self, nombre_coleccion: str, limite: int = 0) -> pd.DataFrame:
+    def extraer_coleccion(self, nombre_coleccion: str, limite = 50_000) -> pd.DataFrame:
     
         if self.db is None:
             raise RuntimeError("Debe llamar a conectar() antes de extraer datos.")
@@ -81,7 +81,7 @@ class Extraccion:
             self.logger.error(f"Error al extraer '{nombre_coleccion}': {e}")
             raise
 
-    def extraer_todo(self, limite: int = 0) -> dict[str, pd.DataFrame]:
+    def extraer_todo(self, limite: int = 50_000) -> dict[str, pd.DataFrame]:
     
         if self.db is None:
             raise RuntimeError("Debe llamar a conectar() antes de extraer datos.")
@@ -91,7 +91,7 @@ class Extraccion:
 
         for nombre in self.COLECCIONES:
             try:
-                df = self.extraer_coleccion(nombre, limite=limite)
+                df = self.extraer_coleccion(nombre, limite = 50_000)
                 dataframes[nombre] = df
             except Exception as e:
                 self.logger.error(f"No se pudo extraer '{nombre}': {e}")
