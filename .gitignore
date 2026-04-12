@@ -99,8 +99,6 @@ pip-delete-this-directory.txt
 .pytype/
 
 # Archivos de datos
-data/*.xlsx
-data/*.sqlite
 
 # Archivos de Cython debug
 cython_debug/

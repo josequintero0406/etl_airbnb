@@ -1,0 +1,37 @@
+2026-04-11 21:00:54 | INFO     | main | Logger 'main' iniciado — archivo: C:\Users\josem\Documents\ITM\Semestre10\Inteligencia Negocios\Taller2\etl_airbnb\logs\log_20260411_2100.txt
+2026-04-11 21:00:54 | INFO     | main | ╔══════════════════════════════════════════╗
+2026-04-11 21:00:54 | INFO     | main | ║   ETL AIRBNB CIUDAD DE MEXICO — INICIO   ║
+2026-04-11 21:00:54 | INFO     | main | ╚══════════════════════════════════════════╝
+2026-04-11 21:00:54 | INFO     | main | --------------------------------------------
+2026-04-11 21:00:54 | INFO     | main | Equipo de trabajo:__________________________
+2026-04-11 21:00:54 | INFO     | main | José Manuel Quintero Rodríguez
+2026-04-11 21:00:54 | INFO     | main | Jalvi Humberto Villegas Taborda
+2026-04-11 21:00:54 | INFO     | main | Roberto Echeverri Arroyave
+2026-04-11 21:00:54 | INFO     | main | --------------------------------------------
+2026-04-11 21:00:54 | INFO     | main | FASE 1: EXTRACCIÓN
+2026-04-11 21:00:54 | INFO     | extraccion | Logger 'extraccion' iniciado — archivo: C:\Users\josem\Documents\ITM\Semestre10\Inteligencia Negocios\Taller2\etl_airbnb\logs\log_20260411_2100.txt
+2026-04-11 21:00:54 | INFO     | extraccion | Extraccion inicializada — URI: mongodb://localhost:27017 | DB: airbnb_mexico
+2026-04-11 21:00:54 | INFO     | extraccion | Intentando conectar a MongoDB...
+2026-04-11 21:00:54 | INFO     | extraccion | Conexión exitosa a MongoDB — Base de datos: 'airbnb_mexico'
+2026-04-11 21:00:54 | INFO     | extraccion | Colecciones disponibles: ['listings', 'calendar', 'reviews']
+2026-04-11 21:00:54 | INFO     | extraccion | === Iniciando extracción completa de colecciones ===
+2026-04-11 21:00:54 | INFO     | extraccion | Extrayendo colección: 'listings'...
+2026-04-11 21:00:54 | INFO     | extraccion |   Aplicando límite de 50000 registros
+2026-04-11 21:00:58 | INFO     | extraccion |   ✓ 'listings': 27,051 registros | 76 columnas
+2026-04-11 21:00:58 | INFO     | extraccion | Extrayendo colección: 'reviews'...
+2026-04-11 21:00:58 | INFO     | extraccion |   Aplicando límite de 50000 registros
+2026-04-11 21:00:59 | INFO     | extraccion |   ✓ 'reviews': 50,000 registros | 6 columnas
+2026-04-11 21:00:59 | INFO     | extraccion | Extrayendo colección: 'calendar'...
+2026-04-11 21:00:59 | INFO     | extraccion |   Aplicando límite de 50000 registros
+2026-04-11 21:01:00 | INFO     | extraccion |   ✓ 'calendar': 50,000 registros | 5 columnas
+2026-04-11 21:01:00 | INFO     | extraccion | === Resumen de extracción ===
+2026-04-11 21:01:00 | INFO     | extraccion |   listings    :   27,051 registros
+2026-04-11 21:01:00 | INFO     | extraccion |   reviews     :   50,000 registros
+2026-04-11 21:01:00 | INFO     | extraccion |   calendar    :   50,000 registros
+2026-04-11 21:01:00 | INFO     | extraccion |   TOTAL       :  127,051 registros extraídos
+2026-04-11 21:01:00 | INFO     | extraccion | Conexión a MongoDB cerrada correctamente.
+2026-04-11 21:01:00 | INFO     | main | FASE 2: TRANSFORMACIÓN
+2026-04-11 21:01:05 | INFO     | main | FASE 3: CARGA
+2026-04-11 21:05:21 | INFO     | main | ╔═════════════════════════════╗
+2026-04-11 21:05:21 | INFO     | main | ║ ETL COMPLETADO EXITOSAMENTE ║
+2026-04-11 21:05:21 | INFO     | main | ╚═════════════════════════════╝
