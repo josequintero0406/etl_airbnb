@@ -11,17 +11,7 @@ Implementación de un proceso ETL completo sobre los datasets de Airbnb Ciudad d
 | Nombre | Responsabilidad |
 |--------|----------------|
 | José Manuel Quintero Rodríguez | Extracción, MongoDB e Informe |
-| Roberto Echeverry Arroyabe | EDA y visualizaciones |
-| Jalvi Humberto Villegas Taborda | Transformación Y Carga|
-
----
-
-## Integrantes del grupo
-
-| Nombre | Responsabilidad |
-|--------|----------------|
-| José Manuel Quintero Rodríguez | Extracción, MongoDB e Informe |
-| Roberto Echeverry Arroyabe | EDA y visualizaciones |
+| Roberto Echeverri Arroyabe | EDA y visualizaciones |
 | Jalvi Humberto Villegas Taborda | Transformación Y Carga|
 
 ---
@@ -69,12 +59,17 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### 3. Instalar dependencias
+### 3. Instalar ipykernel
+```bash
+python -m ipykernel install --user --name etl_airbnb --display-name "Python 3.13 (ETL_Airbnb)"
+```
+
+### 4. Instalar dependencias
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Preparar MongoDB
+### 5. Preparar MongoDB
 
 Descargar los datasets de [Inside Airbnb — Ciudad de México](http://insideairbnb.com/get-the-data/):
 - `listings.csv.gz`
