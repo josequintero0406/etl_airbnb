@@ -14,19 +14,22 @@ from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from logger_config import get_logger
 
+# Clase para la fase de Extracción del proceso ETL
 class Extraccion:
     ## Nombres de las colecciones esperadas en MongoDB
     COLECCIONES = ["listings", "reviews", "calendar"]
 
-    def __init__(self, uri: str = "mongodb://localhost:27017", db_name: str = "airbnb_argentina"):
+    # Constructor de la clase Extraccion
+    def __init__(self, uri: str = "mongodb://localhost:27017", db_name: str = "airbnb_mexico"):
     
         self.uri = uri  ##conexión a MongoDB. Por defecto localhost:27017
-        self.db_name = db_name  ##Nombre de la base de datos.'airbnb_argentina'.
+        self.db_name = db_name  ##Nombre de la base de datos.'airbnb_mexico'.
         self.client = None
         self.db = None
         self.logger = get_logger("extraccion")
         self.logger.info(f"Extraccion inicializada — URI: {uri} | DB: {db_name}")
 
+    # Método principal para conectar a MongoDB y verificar la conexión.
     def conectar(self) -> None:
     
         self.logger.info("Intentando conectar a MongoDB...")
@@ -48,7 +51,8 @@ class Extraccion:
             self.logger.error(f"Fallo de conexión a MongoDB: {e}")
             raise
 
-    def extraer_coleccion(self, nombre_coleccion: str, limite: int = 0) -> pd.DataFrame:
+    # Método para extraer una colección específica y convertirla a DataFrame.
+    def extraer_coleccion(self, nombre_coleccion: str, limite = 50_000) -> pd.DataFrame:
     
         if self.db is None:
             raise RuntimeError("Debe llamar a conectar() antes de extraer datos.")
@@ -81,7 +85,8 @@ class Extraccion:
             self.logger.error(f"Error al extraer '{nombre_coleccion}': {e}")
             raise
 
-    def extraer_todo(self, limite: int = 0) -> dict[str, pd.DataFrame]:
+    # Método para extraer todas las colecciones y convertirlas a DataFrame.
+    def extraer_todo(self, limite = 50_000) -> dict[str, pd.DataFrame]:
     
         if self.db is None:
             raise RuntimeError("Debe llamar a conectar() antes de extraer datos.")
@@ -91,7 +96,7 @@ class Extraccion:
 
         for nombre in self.COLECCIONES:
             try:
-                df = self.extraer_coleccion(nombre, limite=limite)
+                df = self.extraer_coleccion(nombre, limite = 50_000)
                 dataframes[nombre] = df
             except Exception as e:
                 self.logger.error(f"No se pudo extraer '{nombre}': {e}")
@@ -108,6 +113,7 @@ class Extraccion:
 
         return dataframes
 
+    # Método para cerrar la conexión a MongoDB.
     def cerrar_conexion(self) -> None:
 
         if self.client:
@@ -116,19 +122,19 @@ class Extraccion:
 
 # Ejecución directa para prueba rápida
 if __name__ == "__main__":
-    ext = Extraccion(uri="mongodb://localhost:27017", db_name="airbnb_argentina")
+    ext = Extraccion(uri="mongodb://localhost:27017", db_name="airbnb_mexico")
     try:
         ext.conectar()
         dfs = ext.extraer_todo()
 
         print("\n--- Vista previa de Listings ---")
-        print(dfs["listings"].head(3))
+        print(dfs["listings"].head(5))
 
         print("\n--- Vista previa de Calendar ---")
-        print(dfs["calendar"].head(3))
+        print(dfs["calendar"].head(5))
 
         print("\n--- Vista previa de Reviews ---")
-        print(dfs["reviews"].head(3))
+        print(dfs["reviews"].head(5))
 
     finally:
         ext.cerrar_conexion()

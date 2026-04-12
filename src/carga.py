@@ -1,5 +1,5 @@
 """
-Módulo de carga de datos del proceso ETL Airbnb Buenos Aires.
+Módulo de carga de datos del proceso ETL Airbnb Ciudad de México.
 
 Contiene la clase Carga que recibe los DataFrames transformados y los persiste en:
   - Una base de datos SQLite local (para análisis y consultas SQL)
@@ -11,7 +11,7 @@ Uso básico:
     from carga import Carga
 
     carga = Carga(
-        db_path="data/airbnb_argentina.sqlite",
+        db_path="data/airbnb_mexico.sqlite",
         xlsx_dir="data/"
     )
     carga.cargar_todo(dataframes_limpios)
@@ -42,7 +42,7 @@ class Carga:
 
     def __init__(
         self,
-        db_path: str = "data/airbnb_argentina.sqlite",
+        db_path: str = "data/airbnb_mexico.sqlite",
         xlsx_dir: str = "data/",
     ):
         """
@@ -156,7 +156,7 @@ class Carga:
                 self.logger.error(f"  Error exportando '{nombre}' a XLSX: {e}")
 
     # Exportación a XLSX combinado
-    def exportar_xlsx_combinado(self, dataframes: dict[str, pd.DataFrame], nombre_archivo: str = "airbnb_argentina_etl.xlsx") -> None:
+    def exportar_xlsx_combinado(self, dataframes: dict[str, pd.DataFrame], nombre_archivo: str = "airbnb_mexico_etl.xlsx") -> None:
         """
         Exporta todos los DataFrames en un único archivo XLSX con múltiples hojas.
 
@@ -232,7 +232,7 @@ class Carga:
 
         return conteos
 
-    # Método principal
+    # Método principal para cargar todos los DataFrames
     def cargar_todo(self, dataframes: dict[str, pd.DataFrame]) -> None:
         """
         Ejecuta el proceso completo de carga: SQLite + XLSX + verificación.
@@ -279,7 +279,7 @@ if __name__ == "__main__":
 
     # Carga
     carga = Carga(
-        db_path="../data/airbnb_argentina.sqlite",
+        db_path="../data/airbnb_mexico.sqlite",
         xlsx_dir="../data/"
     )
     carga.cargar_todo(dfs_limpios)

@@ -1,0 +1,18 @@
+2026-04-11 14:39:18 | INFO     | extraccion | Logger 'extraccion' iniciado — archivo: C:\Users\josem\Documents\ITM\Semestre10\Inteligencia Negocios\Taller2\etl_airbnb\logs\log_20260411_1439.txt
+2026-04-11 14:39:18 | INFO     | extraccion | Extraccion inicializada — URI: mongodb://localhost:27017 | DB: airbnb_mexico
+2026-04-11 14:39:18 | INFO     | extraccion | Intentando conectar a MongoDB...
+2026-04-11 14:39:18 | INFO     | extraccion | Conexión exitosa a MongoDB — Base de datos: 'airbnb_mexico'
+2026-04-11 14:39:19 | INFO     | extraccion | Colecciones disponibles: ['listings', 'calendar', 'reviews']
+2026-04-11 14:39:19 | INFO     | extraccion | === Iniciando extracción completa de colecciones ===
+2026-04-11 14:39:19 | INFO     | extraccion | Extrayendo colección: 'listings'...
+2026-04-11 14:39:23 | INFO     | extraccion |   ✓ 'listings': 27,051 registros | 76 columnas
+2026-04-11 14:39:23 | INFO     | extraccion | Extrayendo colección: 'reviews'...
+2026-04-11 14:39:47 | INFO     | extraccion |   ✓ 'reviews': 1,454,740 registros | 6 columnas
+2026-04-11 14:39:47 | INFO     | extraccion | Extrayendo colección: 'calendar'...
+2026-04-11 14:49:19 | INFO     | extraccion |   ✓ 'calendar': 9,873,624 registros | 5 columnas
+2026-04-11 14:49:19 | INFO     | extraccion | === Resumen de extracción ===
+2026-04-11 14:49:19 | INFO     | extraccion |   listings    :   27,051 registros
+2026-04-11 14:49:19 | INFO     | extraccion |   reviews     : 1,454,740 registros
+2026-04-11 14:49:19 | INFO     | extraccion |   calendar    : 9,873,624 registros
+2026-04-11 14:49:19 | INFO     | extraccion |   TOTAL       : 11,355,415 registros extraídos
+2026-04-11 14:49:20 | INFO     | extraccion | Conexión a MongoDB cerrada correctamente.

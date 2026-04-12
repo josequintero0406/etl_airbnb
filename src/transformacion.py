@@ -1,5 +1,5 @@
 """
-Módulo de transformación de datos del proceso ETL Airbnb Buenos Aires.
+Módulo de transformación de datos del proceso ETL Airbnb Ciudad de México.
 
 Contiene la clase Transformacion que recibe los DataFrames extraídos de MongoDB
 y aplica limpieza, normalización, derivación de variables y categorización,
@@ -25,6 +25,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from logger_config import get_logger
 
+# Clase para la fase de Transformación del proceso ETL
 class Transformacion:
     """
     Clase encargada de la fase de Transformación del proceso ETL.
@@ -47,6 +48,7 @@ class Transformacion:
     RANGOS_PRECIO = [0, 50, 150, 400, float("inf")]
     ETIQUETAS_PRECIO = ["Económico", "Moderado", "Premium", "Lujo"]
 
+    # Constructor de la clase Transformacion
     def __init__(self, dataframes: dict[str, pd.DataFrame]):
         """
         Inicializa la clase con los DataFrames crudos.
@@ -69,37 +71,45 @@ class Transformacion:
             f"(eliminados: {eliminados:,} | {porcentaje:.1f}%)"
         )
 
+    # Método para limpiar una columna de precio.
     def _limpiar_precio(self, df: pd.DataFrame, columna: str = "price") -> pd.DataFrame:
         """
-        Normaliza una columna de precio: elimina '$', ',' y convierte a float.
+        Normaliza una columna de precio: elimina '$', ',' y convierte a dato de tipo flotante.
 
         Los precios en Airbnb vienen como strings tipo '$1,200.00'.
-        Se eliminan los caracteres no numéricos y se convierte a float.
+        Se eliminan los caracteres no numéricos y se convierte a flotante.
 
         Args:
             df (pd.DataFrame): DataFrame con la columna de precio.
             columna (str): Nombre de la columna de precio.
 
         Returns:
-            pd.DataFrame: DataFrame con la columna transformada a float.
+            pd.DataFrame: DataFrame con la columna transformada a flotante.
         """
         if columna not in df.columns:
             self.logger.warning(f"Columna '{columna}' no encontrada para normalización.")
             return df
 
+        self.logger.info(f"Iniciando limpieza de la columna '{columna}'")
         df = df.copy()
-        # Eliminar símbolo de dolar $, comas y espacios; convertir a dato de tipo flotante
+        
         df[columna] = (
             df[columna]
             .astype(str)
-            .str.replace(r"[\$,\s]", "", regex=True)
-            .replace("nan", None)
-            .replace("", None)
+            .str.strip()
+            .str.replace(r'[\$,\s]', '', regex=True)  # Eliminar $, comas y espacios
+            .replace('', None)       # Strings vacíos → None
+            .replace('nan', None)    # El string 'nan' → None
+            .replace('None', None)   # El string 'None' → None
         )
-        df[columna] = pd.to_numeric(df[columna], errors="coerce")
-        self.logger.info(f"  Precio normalizado en columna '{columna}' → float")
+
+        df[columna] = pd.to_numeric(df[columna], errors='coerce')  # Inválidos → NaN
+
+        nulos = df[columna].isna().sum()
+        self.logger.info(f"  Precio normalizado en columna '{columna}' → float | NaN: {nulos:,}")
         return df
 
+    # Método para convertir una columna de fecha.
     def _convertir_fecha(self, df: pd.DataFrame, columna: str = "date") -> pd.DataFrame:
         """
         Convierte una columna de fecha al formato estándar datetime y YYYY-MM-DD.
@@ -120,9 +130,10 @@ class Transformacion:
         invalidos = df[columna].isna().sum()
         if invalidos > 0:
             self.logger.warning(f"  {invalidos:,} fechas inválidas en '{columna}' → NaT")
-        self.logger.info(f"  Fechas convertidas en columna '{columna}'")
+        self.logger.info(f" Fechas convertidas en columna '{columna}'")
         return df
 
+    # Método para derivar variables temporales.
     def _derivar_variables_temporales(self, df: pd.DataFrame, columna: str = "date") -> pd.DataFrame:
         """
         Deriva variables temporales a partir de una columna de fecha.
@@ -149,6 +160,7 @@ class Transformacion:
         self.logger.info(f"  Variables temporales derivadas desde '{columna}': anio, mes, dia, trimestre, nombre_mes, dia_semana")
         return df
 
+    # Método para categorizar una columna de precio.
     def _categorizar_precio(self, df: pd.DataFrame, columna: str = "price") -> pd.DataFrame:
         """
         Agrega una columna 'categoria_precio' basada en rangos predefinidos.
@@ -180,6 +192,7 @@ class Transformacion:
         self.logger.info(f"  Categorías de precio asignadas:\n{conteo.to_string()}")
         return df
 
+    # Método para expandir el campo 'amenities' de string/lista a columna con conteo.
     def _expandir_amenities(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Expande el campo 'amenities' de string/lista a columna con conteo.
@@ -201,7 +214,11 @@ class Transformacion:
         df = df.copy()
 
         def contar_amenities(valor):
-            if pd.isna(valor) or valor == "":
+            if valor is None:
+                return 0
+            if isinstance(valor, float) and pd.isna(valor):
+                return 0
+            if valor == "":
                 return 0
             try:
                 lista = ast.literal_eval(str(valor))
@@ -217,7 +234,19 @@ class Transformacion:
         )
         return df
 
+    # ------------------------------------------------------------------------------
     # Transformaciones por colección
+    # ------------------------------------------------------------------------------
+
+    # Método para transformar un DataFrame de Listings.
+
+    def transformar_listings(self, df: pd.DataFrame) -> pd.DataFrame:
+        self.logger.info("=== Transformando Listings ===")
+        self.logger.info(f"  Columnas disponibles: {list(df.columns)}")  # <-- agregar esta línea
+        self.logger.info(f"  'price' en columnas: {'price' in df.columns}")  # <-- y esta
+        antes = len(df)
+        df = df.copy()
+
     def transformar_listings(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Aplica todas las transformaciones al DataFrame de Listings.
@@ -251,11 +280,15 @@ class Transformacion:
         cols_antes = len(df.columns)
         df = df.loc[:, df.isnull().mean() < umbral_nulos]
         self.logger.info(
-            f"  Columnas eliminadas por >70% nulos: {cols_antes - len(df.columns)}"
+            f"  Columnas eliminadas por > 70% nulos: {cols_antes - len(df.columns)}"
         )
 
         # 3. Normalizar precio
+        antes_precio = df['price'].notna().sum()
         df = self._limpiar_precio(df, "price")
+        despues_precio = df['price'].notna().sum()
+        self.logger.info(f"  Precios limpiados: {antes_precio:,} → {despues_precio:,} valores numéricos válidos")
+        df = self._categorizar_precio(df, "price")
 
         # 4. Convertir fecha de scraping
         if "last_scraped" in df.columns:
@@ -264,7 +297,7 @@ class Transformacion:
         # 5. Categorizar precio
         df = self._categorizar_precio(df, "price")
 
-        # 6. Expandir amenities
+        # 6. Expandir comodidades
         df = self._expandir_amenities(df)
 
         # 7. Convertir host_is_superhost a booleano
@@ -295,6 +328,7 @@ class Transformacion:
         self.logger.info(f"  Columnas finales: {len(df.columns)}")
         return df
 
+    # Método para transformar un DataFrame de Calendar.
     def transformar_calendar(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Aplica todas las transformaciones al DataFrame de Calendar.
@@ -325,17 +359,12 @@ class Transformacion:
         df = self._convertir_fecha(df, "date")
         df = _derivar_variables_temporales_local(df, "date", self.logger)
 
-        # 3. Normalizar precio
-        df = self._limpiar_precio(df, "price")
-        if "adjusted_price" in df.columns:
-            df = self._limpiar_precio(df, "adjusted_price")
-
-        # 4. Convertir 'available' a booleano
+        # 3. Convertir 'available' a booleano
         if "available" in df.columns:
             df["available"] = df["available"].map({"t": True, "f": False, True: True, False: False})
             self.logger.info("  'available' convertido a booleano")
 
-        # 5. Eliminar filas con fecha nula (no tienen valor analítico)
+        # 4. Eliminar filas con fecha nula (no tienen valor analítico)
         if "date" in df.columns:
             nulos_fecha = df["date"].isna().sum()
             if nulos_fecha > 0:
@@ -346,6 +375,7 @@ class Transformacion:
         self._log_cambio_registros("calendar", antes, despues)
         return df
 
+    # Método para transformar un DataFrame de Reviews.
     def transformar_reviews(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Aplica todas las transformaciones al DataFrame de Reviews.
@@ -391,7 +421,7 @@ class Transformacion:
         self._log_cambio_registros("reviews", antes, despues)
         return df
 
-    # Método principal
+    # Método principal para transformar todos los DataFrames.
     def transformar_todo(self) -> dict[str, pd.DataFrame]:
         """
         Ejecuta todas las transformaciones sobre los tres DataFrames.
